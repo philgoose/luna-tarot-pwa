@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LUNA TAROT | 전화 타로 상담 플랫폼</title>
+  <meta name="theme-color" content="#171225" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Noto+Sans+KR:wght@400;500;700;900&display=swap');
+
+    :root{
+      --night:#0f0c1a;
+      --midnight:#171225;
+      --plum:#2a173d;
+      --violet:#4b2f68;
+      --rose:#b98292;
+      --cream:#f7efe1;
+      --paper:#fffaf0;
+      --gold:#d8b469;
+      --gold2:#f0d89d;
+      --ink:#29202c;
+      --muted:#8d8196;
+      --line:rgba(216,180,105,.24);
+      --green:#5bbd8b;
+      --red:#d86473;
+      --shadow:0 24px 70px rgba(15,12,26,.28);
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      color:var(--cream);
+      font-family:"Noto Sans KR",system-ui,-apple-system,sans-serif;
+      background:
+        radial-gradient(circle at 15% 5%, rgba(216,180,105,.16), transparent 22%),
+        radial-gradient(circle at 80% 15%, rgba(185,130,146,.14), transparent 25%),
+        linear-gradient(135deg,#0c0914 0%,#171225 45%,#24142e 100%);
+      min-height:100vh;
+      overflow-x:hidden;
+    }
+
+    body:before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      opacity:.18;
+      background-image:
+        linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px);
+      background-size:48px 48px;
+      mask-image:radial-gradient(circle at center, black, transparent 82%);
+    }
+
+    body:after{
+      content:"✦     ☾       ✧      ✦       ☽      ✶";
+      position:fixed;
+      left:4vw;
+      right:4vw;
+      top:14px;
+      pointer-events:none;
+      color:rgba(216,180,105,.28);
+      font-family:Cinzel,serif;
+      font-size:22px;
+      letter-spacing:24px;
+      white-space:nowrap;
+      overflow:hidden;
+    }
+
+    .wrap{width:min(1220px,calc(100% - 36px));margin:0 auto}
+    .serif{font-family:Cinzel,"Noto Sans KR",serif;letter-spacing:.04em}
+
+    header{
+      position:sticky;
+      top:0;
+      z-index:30;
+      backdrop-filter:blur(18px);
+      background:rgba(15,12,26,.76);
+      border-bottom:1px solid var(--line);
+    }
+
+    .nav{
+      height:74px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:20px;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-width:210px;
+    }
+
+    .brand-mark{
+      width:42px;height:42px;border-radius:50%;
+      display:grid;place-items:center;
+      color:var(--gold2);
+      background:
+        radial-gradient(circle at 35% 30%,rgba(255,255,255,.18),transparent 28%),
+        linear-gradient(135deg,#21172e,#4a2d61);
+      border:1px solid rgba(216,180,105,.45);
+      box-shadow:0 0 30px rgba(216,180,105,.18);
+      font-size:21px;
+    }
+
+    .brand-name{font-family:Cinzel,serif;color:var(--gold2);font-weight:700;font-size:17px}
+    .brand-sub{font-size:11px;color:rgba(247,239,225,.65);margin-top:2px}
+
+    .nav-menu{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      padding:6px;
+      border:1px solid rgba(216,180,105,.16);
+      border-radius:999px;
+      background:rgba(255,255,255,.04);
+    }
+
+    .nav-menu button{
+      border:0;
+      background:transparent;
+      color:rgba(247,239,225,.72);
+      padding:10px 15px;
+      border-radius:999px;
+      font-weight:800;
+      cursor:pointer;
+    }
+
+    .nav-menu button.active{
+      background:linear-gradient(135deg,rgba(216,180,105,.98),rgba(240,216,157,.9));
+      color:#21172e;
+    }
+
+    .nav-actions{display:flex;gap:10px;align-items:center}
+    .icon-btn{
+      width:42px;height:42px;border-radius:50%;
+      display:grid;place-items:center;
+      background:rgba(255,255,255,.05);
+      border:1px solid rgba(216,180,105,.18);
+      color:var(--cream);
+      cursor:pointer;
+      position:relative;
+    }
+    .dot{
+      position:absolute;
+      right:8px;top:7px;
+      width:8px;height:8px;border-radius:50%;
+      background:var(--red);
+      box-shadow:0 0 0 4px rgba(216,100,115,.15);
+    }
+
+    main{padding:34px 0 80px}
+    .page{display:none}
+    .page.active{display:block}
+
+    .hero{
+      display:grid;
+      grid-template-columns:1.12fr .88fr;
+      gap:22px;
+      align-items:stretch;
+      margin-top:12px;
+    }
+
+    .hero-card{
+      position:relative;
+      overflow:hidden;
+      min-height:420px;
+      border-radius:34px;
+      padding:42px;
+      border:1px solid rgba(216,180,105,.25);
+      background:
+        radial-gradient(circle at 76% 28%,rgba(216,180,105,.20),transparent 24%),
+        radial-gradient(circle at 88% 76%,rgba(185,130,146,.16),transparent 26%),
+        linear-gradient(135deg,rgba(42,23,61,.96),rgba(15,12,26,.98));
+      box-shadow:var(--shadow);
+    }
+
+    .hero-card:before{
+      content:"";
+      position:absolute;
+      right:-90px;top:-110px;
+      width:360px;height:360px;border-radius:50%;
+      border:1px solid rgba(216,180,105,.20);
+      box-shadow:0 0 0 34px rgba(216,180,105,.045), 0 0 0 72px rgba(216,180,105,.025);
+    }
+
+    .eyebrow{
+      color:var(--gold2);
+      font-size:13px;
+      font-weight:800;
+      letter-spacing:.22em;
+      text-transform:uppercase;
+      margin-bottom:12px;
+    }
+
+    h1{
+      font-family:Cinzel,"Noto Sans KR",serif;
+      font-size:clamp(34px,5vw,62px);
+      line-height:1.05;
+      margin:0 0 18px;
+      letter-spacing:.02em;
+      color:#fff7e8;
+    }
+
+    .hero p{
+      color:rgba(247,239,225,.78);
+      font-size:17px;
+      line-height:1.8;
+      margin:0;
+      max-width:560px;
+    }
+
+    .hero-visual{
+      position:absolute;
+      right:46px;
+      bottom:28px;
+      width:300px;
+      height:230px;
+      pointer-events:none;
+      opacity:.94;
+    }
+
+    .tarot-card{
+      position:absolute;
+      width:110px;height:170px;border-radius:16px;
+      background:
+        radial-gradient(circle at center,rgba(240,216,157,.24),transparent 34%),
+        linear-gradient(160deg,#191329,#331b48);
+      border:1px solid rgba(216,180,105,.58);
+      box-shadow:0 18px 36px rgba(0,0,0,.3);
+      display:grid;
+      place-items:center;
+      color:var(--gold2);
+      font-family:Cinzel,serif;
+      font-size:40px;
+    }
+    .tarot-card:nth-child(1){right:120px;bottom:20px;transform:rotate(-12deg)}
+    .tarot-card:nth-child(2){right:74px;bottom:35px;transform:rotate(4deg)}
+    .tarot-card:nth-child(3){right:28px;bottom:12px;transform:rotate(14deg)}
+
+    .search-box{
+      margin-top:34px;
+      display:grid;
+      grid-template-columns:1fr 160px 140px 54px;
+      gap:10px;
+      padding:10px;
+      border-radius:22px;
+      background:rgba(255,250,240,.93);
+      border:1px solid rgba(216,180,105,.36);
+      max-width:760px;
+      position:relative;
+      z-index:2;
+    }
+
+    input,select,textarea{
+      width:100%;
+      border:1px solid rgba(42,23,61,.12);
+      background:#fffdf6;
+      color:var(--ink);
+      border-radius:15px;
+      padding:14px 15px;
+      font:inherit;
+      outline:none;
+    }
+
+    input:focus,select:focus,textarea:focus{border-color:var(--gold)}
+    .search-box button{border-radius:16px;padding:0}
+
+    .side-stack{
+      display:grid;
+      gap:18px;
+    }
+
+    .glass{
+      border-radius:30px;
+      padding:24px;
+      border:1px solid rgba(216,180,105,.24);
+      background:linear-gradient(145deg,rgba(255,255,255,.07),rgba(255,255,255,.035));
+      box-shadow:0 22px 56px rgba(0,0,0,.2);
+    }
+
+    .wallet{
+      min-height:210px;
+      background:
+        radial-gradient(circle at 87% 26%,rgba(216,180,105,.27),transparent 22%),
+        linear-gradient(145deg,rgba(75,47,104,.88),rgba(28,19,43,.96));
+      overflow:hidden;
+      position:relative;
+    }
+
+    .wallet:after{
+      content:"";
+      position:absolute;
+      right:26px;bottom:24px;
+      width:80px;height:80px;border-radius:50%;
+      background:radial-gradient(circle at 38% 34%,#fff4c9,#d8b469 42%,#8a642b 100%);
+      box-shadow:-26px 18px 0 -7px rgba(216,180,105,.65), -48px 34px 0 -15px rgba(216,180,105,.5);
+      opacity:.65;
+    }
+
+    .panel-title{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:16px;
+    }
+
+    .panel-title h2,.panel-title h3{
+      margin:0;
+      font-size:21px;
+      color:#fff7e8;
+      letter-spacing:-.02em;
+    }
+
+    .muted{color:rgba(247,239,225,.62);font-size:13px}
+    .balance{
+      font-family:Cinzel,"Noto Sans KR",serif;
+      color:var(--gold2);
+      font-size:46px;
+      margin:14px 0 6px;
+    }
+
+    button,.button{
+      border:0;
+      border-radius:16px;
+      padding:13px 18px;
+      font-weight:900;
+      cursor:pointer;
+      transition:.18s ease;
+      font-family:"Noto Sans KR",sans-serif;
+    }
+
+    button:hover{transform:translateY(-1px);filter:brightness(1.05)}
+    .primary{
+      background:linear-gradient(135deg,var(--gold),var(--gold2));
+      color:#21172e;
+      box-shadow:0 12px 26px rgba(216,180,105,.2);
+    }
+    .secondary{
+      background:rgba(255,255,255,.08);
+      color:var(--cream);
+      border:1px solid rgba(216,180,105,.22);
+    }
+    .danger{background:linear-gradient(135deg,#a33c4b,#e0717e);color:white}
+    .success{background:linear-gradient(135deg,#328360,#67c896);color:white}
+    .purple{background:linear-gradient(135deg,#563572,#7b509b);color:white}
+
+    .section-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-end;
+      gap:18px;
+      margin:34px 0 16px;
+    }
+    .section-head h2{
+      margin:0;
+      color:#fff7e8;
+      font-size:28px;
+      letter-spacing:-.03em;
+    }
+
+    .chips{
+      display:flex;
+      gap:9px;
+      flex-wrap:wrap;
+      margin-top:16px;
+    }
+
+    .chip{
+      border:1px solid rgba(216,180,105,.18);
+      background:rgba(255,255,255,.05);
+      color:rgba(247,239,225,.78);
+      border-radius:999px;
+      padding:10px 13px;
+      font-size:13px;
+      font-weight:800;
+      cursor:pointer;
+    }
+    .chip.active{
+      background:rgba(216,180,105,.16);
+      color:var(--gold2);
+      border-color:rgba(216,180,105,.45);
+    }
+
+    .advisors{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:16px;
+    }
+
+    .advisor-card{
+      overflow:hidden;
+      border-radius:28px;
+      border:1px solid rgba(216,180,105,.2);
+      background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.035));
+      box-shadow:0 18px 48px rgba(0,0,0,.18);
+      position:relative;
+    }
+
+    .portrait{
+      height:150px;
+      position:relative;
+      background:
+        radial-gradient(circle at 70% 20%,rgba(216,180,105,.24),transparent 24%),
+        linear-gradient(145deg,#2a173d,#120e20);
+      display:grid;
+      place-items:center;
+      overflow:hidden;
+    }
+
+    .portrait .face{
+      width:94px;height:94px;border-radius:50%;
+      background:
+        linear-gradient(135deg,rgba(255,255,255,.18),rgba(255,255,255,.03)),
+        var(--avatar);
+      border:2px solid rgba(216,180,105,.5);
+      display:grid;place-items:center;
+      font-size:42px;
+      box-shadow:0 16px 32px rgba(0,0,0,.28);
+    }
+
+    .status{
+      position:absolute;
+      top:12px;left:12px;
+      font-size:12px;
+      font-weight:900;
+      padding:7px 10px;
+      border-radius:999px;
+      background:rgba(91,189,139,.18);
+      color:#9af0c4;
+      border:1px solid rgba(91,189,139,.4);
+      backdrop-filter:blur(8px);
+    }
+    .status.busy{background:rgba(216,100,115,.18);border-color:rgba(216,100,115,.4);color:#ffacb6}
+    .status.off{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.18);color:#c6bdca}
+
+    .heart{
+      position:absolute;top:12px;right:12px;
+      width:36px;height:36px;border-radius:50%;
+      background:rgba(15,12,26,.55);
+      border:1px solid rgba(216,180,105,.22);
+      color:var(--gold2);
+      display:grid;place-items:center;
+      cursor:pointer;
+    }
+
+    .advisor-body{padding:18px}
+    .advisor-name{font-size:19px;font-weight:900;color:#fff7e8}
+    .advisor-desc{font-size:13px;color:rgba(247,239,225,.64);line-height:1.5;margin:6px 0 12px}
+    .rating{color:var(--gold2);font-weight:900;font-size:13px}
+    .price{font-size:18px;font-weight:900;color:#fff7e8;margin-top:5px}
+    .actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
+    .actions button{padding:11px 8px;font-size:13px}
+
+    .two-col{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:18px;
+    }
+
+    .table-wrap{overflow:auto}
+    table{width:100%;border-collapse:collapse;min-width:680px}
+    th,td{
+      border-bottom:1px solid rgba(216,180,105,.14);
+      padding:14px;
+      text-align:left;
+      color:rgba(247,239,225,.78);
+      font-size:14px;
+    }
+    th{color:var(--gold2);font-weight:900;background:rgba(255,255,255,.035)}
+    .kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+    .kpi{
+      border-radius:24px;
+      padding:20px;
+      border:1px solid rgba(216,180,105,.18);
+      background:rgba(255,255,255,.055);
+    }
+    .kpi .label{color:rgba(247,239,225,.58);font-size:13px}
+    .kpi strong{display:block;color:#fff7e8;font-size:28px;margin-top:8px}
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    label{display:block;font-size:13px;color:var(--gold2);font-weight:900;margin:0 0 7px}
+    .field{margin-bottom:14px}
+    .history-item{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      padding:14px 0;
+      border-bottom:1px solid rgba(216,180,105,.12);
+    }
+    .round-icon{
+      width:44px;height:44px;border-radius:50%;
+      display:grid;place-items:center;
+      background:rgba(216,180,105,.13);
+      color:var(--gold2);
+      border:1px solid rgba(216,180,105,.25);
+      flex:none;
+    }
+    .call-modal{
+      position:fixed;
+      inset:0;
+      z-index:100;
+      background:rgba(5,4,10,.72);
+      backdrop-filter:blur(14px);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+    }
+    .call-modal.active{display:flex}
+    .call-panel{
+      width:min(460px,100%);
+      border-radius:34px;
+      border:1px solid rgba(216,180,105,.35);
+      background:
+        radial-gradient(circle at 50% 16%,rgba(216,180,105,.18),transparent 32%),
+        linear-gradient(145deg,#251738,#100c1a);
+      padding:34px;
+      text-align:center;
+      box-shadow:var(--shadow);
+    }
+    .orb{
+      width:128px;height:128px;margin:16px auto 22px;border-radius:50%;
+      background:
+        radial-gradient(circle at 40% 30%,#fff4c8,#d8b469 36%,#513a76 68%,#161024);
+      box-shadow:0 0 0 18px rgba(216,180,105,.06),0 0 60px rgba(216,180,105,.28);
+      display:grid;place-items:center;
+      color:#171225;
+      font-size:44px;
+      animation:breath 1.8s infinite ease-in-out;
+    }
+    @keyframes breath{50%{transform:scale(1.04);box-shadow:0 0 0 28px rgba(216,180,105,.035),0 0 80px rgba(216,180,105,.35)}}
+    .progress{height:9px;border-radius:999px;background:rgba(255,255,255,.11);overflow:hidden;margin:18px 0}
+    .bar{height:100%;width:0%;background:linear-gradient(90deg,var(--gold),var(--gold2))}
+    .toast{
+      position:fixed;
+      right:20px;
+      bottom:20px;
+      z-index:200;
+      background:rgba(255,250,240,.96);
+      color:var(--ink);
+      border:1px solid rgba(216,180,105,.45);
+      padding:14px 16px;
+      border-radius:18px;
+      box-shadow:0 16px 40px rgba(0,0,0,.25);
+      display:none;
+      max-width:340px;
+      font-weight:800;
+    }
+    .toast.show{display:block}
+    .banner{
+      margin-top:18px;
+      border-radius:28px;
+      padding:22px 26px;
+      background:
+        radial-gradient(circle at right,rgba(216,180,105,.22),transparent 24%),
+        linear-gradient(135deg,rgba(75,47,104,.85),rgba(32,21,47,.96));
+      border:1px solid rgba(216,180,105,.22);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:18px;
+    }
+    .bottom-nav{display:none}
+
+    @media(max-width:1040px){
+      .hero{grid-template-columns:1fr}
+      .advisors{grid-template-columns:repeat(2,1fr)}
+      .kpi-grid{grid-template-columns:repeat(2,1fr)}
+      .search-box{grid-template-columns:1fr 1fr}
+      .hero-visual{opacity:.35}
+    }
+
+    @media(max-width:720px){
+      .wrap{width:min(100% - 28px,1220px)}
+      .nav{height:66px}
+      .nav-menu,.nav-actions{display:none}
+      main{padding:20px 0 96px}
+      .hero-card{padding:28px;min-height:460px}
+      .hero p{font-size:15px}
+      .search-box{grid-template-columns:1fr;padding:8px}
+      .advisors{grid-template-columns:1fr}
+      .two-col,.form-grid{grid-template-columns:1fr}
+      .kpi-grid{grid-template-columns:1fr 1fr}
+      .section-head{align-items:flex-start;flex-direction:column}
+      .banner{flex-direction:column;align-items:flex-start}
+      .bottom-nav{
+        display:grid;
+        position:fixed;
+        left:12px;right:12px;bottom:12px;
+        z-index:50;
+        grid-template-columns:repeat(4,1fr);
+        background:rgba(15,12,26,.92);
+        backdrop-filter:blur(16px);
+        border:1px solid rgba(216,180,105,.24);
+        border-radius:24px;
+        padding:9px;
+        box-shadow:0 18px 48px rgba(0,0,0,.3);
+      }
+      .bottom-nav button{
+        background:transparent;
+        color:rgba(247,239,225,.7);
+        padding:9px 4px;
+        border-radius:16px;
+        font-size:11px;
+      }
+      .bottom-nav button.active{background:rgba(216,180,105,.16);color:var(--gold2)}
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div class="wrap nav">
+    <div class="brand">
+      <div class="brand-mark">☾</div>
+      <div>
+        <div class="brand-name">LUNA TAROT</div>
+        <div class="brand-sub">전화 타로 상담 플랫폼</div>
+      </div>
+    </div>
+    <div class="nav-menu">
+      <button class="active" data-nav="customer" onclick="go('customer')">상담사</button>
+      <button data-nav="reader" onclick="go('reader')">상담사 센터</button>
+      <button data-nav="admin" onclick="go('admin')">관리자</button>
+      <button data-nav="profit" onclick="go('profit')">수익 계산</button>
+    </div>
+    <div class="nav-actions">
+      <button class="icon-btn" onclick="toast('알림: 상담 가능 상담사 3명이 새로 입점했습니다.')">♢<span class="dot"></span></button>
+      <button class="icon-btn" onclick="toast('찜 목록 기능은 브라우저 저장소에 저장됩니다.')">♡</button>
+      <button class="icon-btn" onclick="toast('PWA 설치: 배포 시 manifest와 service worker를 연결하면 됩니다.')">☰</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section id="customer" class="page active">
+    <div class="hero">
+      <div class="hero-card">
+        <div class="eyebrow">Moonlit Consultation</div>
+        <h1>오늘의 운세를<br/>만나보세요</h1>
+        <p>신뢰할 수 있는 타로 상담사와 전화·채팅으로 연결됩니다. 코인을 충전하고, 상담 시간에 따라 자동 차감되는 실제 플랫폼 흐름을 체험해보세요.</p>
+        <div class="chips" id="categoryChips"></div>
+        <div class="search-box">
+          <input id="searchKeyword" placeholder="상담사 이름, 키워드 검색" oninput="renderAdvisors()" />
+          <select id="categoryFilter" onchange="renderAdvisors()">
+            <option value="전체">전체 분야</option>
+            <option value="연애·궁합">연애·궁합</option>
+            <option value="재회·썸">재회·썸</option>
+            <option value="금전·재물">금전·재물</option>
+            <option value="직장·사업">직장·사업</option>
+            <option value="진로·취업">진로·취업</option>
+          </select>
+          <select id="statusFilter" onchange="renderAdvisors()">
+            <option value="전체">전체 상태</option>
+            <option value="상담 가능">상담 가능</option>
+            <option value="상담 중">상담 중</option>
+            <option value="부재중">부재중</option>
+          </select>
+          <button class="primary" onclick="renderAdvisors()">⌕</button>
+        </div>
+        <div class="hero-visual">
+          <div class="tarot-card">☾</div>
+          <div class="tarot-card">✦</div>
+          <div class="tarot-card">☼</div>
+        </div>
+      </div>
+
+      <div class="side-stack">
+        <div class="glass wallet">
+          <div class="panel-title">
+            <h3>내 지갑</h3><span class="muted">coin wallet</span>
+          </div>
+          <div class="balance"><span id="coinBalance">0</span> C</div>
+          <div class="muted">보너스 코인 150C · 상담 시작 전 녹취 고지 필요</div>
+          <div style="display:flex;gap:10px;margin-top:20px;flex-wrap:wrap">
+            <button class="primary" onclick="charge(30000)">30,000C 충전</button>
+            <button class="secondary" onclick="charge(100000)">100,000C</button>
+          </div>
+        </div>
+        <div class="glass">
+          <div class="panel-title">
+            <h3>상담 내역</h3>
+            <button class="secondary" onclick="go('reader')" style="padding:9px 12px">더보기</button>
+          </div>
+          <div id="recentHistory"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-head">
+      <div>
+        <h2>실시간 상담 가능 상담사</h2>
+        <div class="muted">현재 <b id="onlineCount" style="color:var(--gold2)">0명</b>이 상담 가능합니다.</div>
+      </div>
+      <button class="secondary" onclick="toggleOnlyOnline()">상담 가능만 보기</button>
+    </div>
+    <div class="advisors" id="advisorList"></div>
+
+    <div class="banner">
+      <div>
+        <div class="serif" style="font-size:25px;color:#fff7e8">신규 가입 고객님께 3,000코인을 드려요</div>
+        <div class="muted" style="margin-top:6px">첫 상담 전환을 높이는 웰컴 코인 프로모션 영역입니다.</div>
+      </div>
+      <button class="primary" onclick="charge(3000)">코인 받기</button>
+    </div>
+  </section>
+
+  <section id="reader" class="page">
+    <div class="section-head">
+      <div>
+        <h2>상담사 센터</h2>
+        <div class="muted">입점 상담사의 프로필·상태·수익·정산 신청 관리</div>
+      </div>
+    </div>
+    <div class="two-col">
+      <div class="glass">
+        <div class="panel-title"><h3>프로필 관리</h3></div>
+        <div class="form-grid">
+          <div class="field"><label>상담사명</label><input id="readerName" value="루나 타로" /></div>
+          <div class="field"><label>전문 분야</label><select id="readerCategory"><option>연애·궁합</option><option>재회·썸</option><option>금전·재물</option><option>직장·사업</option><option>진로·취업</option></select></div>
+          <div class="field"><label>상담 상태</label><select id="readerStatus"><option>상담 가능</option><option>상담 중</option><option>부재중</option></select></div>
+          <div class="field"><label>분당 상담료</label><input id="readerPrice" type="number" value="350" /></div>
+        </div>
+        <div class="field"><label>소개 문구</label><textarea id="readerDesc" rows="4">마음의 결을 읽고, 지금 필요한 선택을 부드럽게 안내합니다.</textarea></div>
+        <button class="primary" onclick="saveReaderProfile()">상담사 프로필 저장</button>
+      </div>
+      <div class="glass">
+        <div class="panel-title"><h3>수익·정산</h3></div>
+        <div class="kpi-grid" style="grid-template-columns:1fr 1fr">
+          <div class="kpi"><div class="label">오늘 상담</div><strong id="readerCalls">0건</strong></div>
+          <div class="kpi"><div class="label">예상 정산</div><strong id="readerRevenue">0원</strong></div>
+        </div>
+        <div style="margin-top:16px" class="muted">상담 매출의 65%를 상담사 정산 기준으로 계산했습니다. 실제 서비스에서는 환불, 세금, PG 정산 주기 반영이 필요합니다.</div>
+        <button class="purple" style="margin-top:18px" onclick="toast('정산 신청이 관리자에게 전달되었습니다.')">정산 신청</button>
+      </div>
+    </div>
+    <div class="glass" style="margin-top:18px">
+      <div class="panel-title"><h3>상담 이력</h3></div>
+      <div id="readerHistory"></div>
+    </div>
+  </section>
+
+  <section id="admin" class="page">
+    <div class="section-head">
+      <div>
+        <h2>관리자 운영 콘솔</h2>
+        <div class="muted">회원·상담사·결제·정산·로그·보안 운영 화면</div>
+      </div>
+    </div>
+    <div class="kpi-grid">
+      <div class="kpi"><div class="label">총 회원</div><strong>1,248</strong></div>
+      <div class="kpi"><div class="label">입점 상담사</div><strong id="adminAdvisorCount">0</strong></div>
+      <div class="kpi"><div class="label">월 결제액</div><strong id="adminSales">0원</strong></div>
+      <div class="kpi"><div class="label">플랫폼 수수료</div><strong id="adminFee">0원</strong></div>
+    </div>
+    <div class="two-col" style="margin-top:18px">
+      <div class="glass">
+        <div class="panel-title"><h3>상담사 승인/상태 관리</h3></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>상담사</th><th>분야</th><th>상태</th><th>분당료</th><th>관리</th></tr></thead>
+            <tbody id="adminTable"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="glass">
+        <div class="panel-title"><h3>운영·보안 체크리스트</h3></div>
+        <div class="history-item"><div><b>관리자 2FA</b><div class="muted">계정 탈취 방지</div></div><div class="round-icon">✓</div></div>
+        <div class="history-item"><div><b>녹취 고지/저장</b><div class="muted">통화 시작 전 고지 및 저장 정책</div></div><div class="round-icon">✓</div></div>
+        <div class="history-item"><div><b>결제·정산 로그</b><div class="muted">PG, 코인, 차감, 환불 이력 분리</div></div><div class="round-icon">✓</div></div>
+        <div class="history-item"><div><b>백업·복구</b><div class="muted">AWS/GCP 백업 및 장애 대응</div></div><div class="round-icon">✓</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="profit" class="page">
+    <div class="section-head">
+      <div>
+        <h2>수익 시뮬레이터</h2>
+        <div class="muted">플랫폼 의뢰자가 실제로 얼마를 벌 수 있는지 계산</div>
+      </div>
+    </div>
+    <div class="two-col">
+      <div class="glass">
+        <div class="form-grid">
+          <div class="field"><label>입점 상담사 수</label><input id="simReaders" type="number" value="50" oninput="simulate()" /></div>
+          <div class="field"><label>상담사 1명당 일 매출</label><input id="simDaily" type="number" value="50000" oninput="simulate()" /></div>
+          <div class="field"><label>플랫폼 수수료율 (%)</label><input id="simRate" type="number" value="35" oninput="simulate()" /></div>
+          <div class="field"><label>월 고정비+마케팅비</label><input id="simCost" type="number" value="12000000" oninput="simulate()" /></div>
+        </div>
+        <button class="primary" onclick="simulate()">계산하기</button>
+      </div>
+      <div class="glass">
+        <div class="kpi-grid" style="grid-template-columns:1fr 1fr">
+          <div class="kpi"><div class="label">월 총 결제액</div><strong id="simGross">0원</strong></div>
+          <div class="kpi"><div class="label">플랫폼 매출</div><strong id="simPlatform">0원</strong></div>
+          <div class="kpi"><div class="label">예상 순이익</div><strong id="simProfit">0원</strong></div>
+          <div class="kpi"><div class="label">개발비 회수</div><strong id="simPayback">0개월</strong></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div class="call-modal" id="callModal">
+  <div class="call-panel">
+    <div class="eyebrow">Live Call</div>
+    <h2 class="serif" id="callName" style="margin:0;color:#fff7e8;font-size:32px">상담 연결 중</h2>
+    <div class="orb">☾</div>
+    <div id="callText" class="muted">상담 시간이 코인으로 자동 차감됩니다.</div>
+    <div class="progress"><div class="bar" id="callBar"></div></div>
+    <button class="danger" onclick="endCall()">상담 종료</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<div class="bottom-nav">
+  <button class="active" data-nav="customer" onclick="go('customer')">홈</button>
+  <button data-nav="reader" onclick="go('reader')">상담사</button>
+  <button data-nav="admin" onclick="go('admin')">관리자</button>
+  <button data-nav="profit" onclick="go('profit')">수익</button>
+</div>
+
+<script>
+  const KRW = n => Math.round(n).toLocaleString('ko-KR') + '원';
+  const NUM = n => Math.round(n).toLocaleString('ko-KR');
+
+  const defaultReaders = [
+    {name:'루나 타로', field:'연애·궁합', status:'상담 가능', price:350, rating:4.9, review:1268, emoji:'☾', color:'#6d4d8b', desc:'관계의 흐름과 마음의 방향을 섬세하게 읽습니다.'},
+    {name:'별빛 타로', field:'재회·썸', status:'상담 가능', price:320, rating:4.8, review:982, emoji:'✦', color:'#845f77', desc:'기다림과 선택 사이에서 현실적인 답을 드립니다.'},
+    {name:'지혜 선생', field:'직장·사업', status:'상담 가능', price:380, rating:4.9, review:1153, emoji:'♜', color:'#4f668f', desc:'일, 계약, 사업운을 차분하고 명료하게 봅니다.'},
+    {name:'여우별 타로', field:'금전·재물', status:'상담 중', price:300, rating:4.7, review:765, emoji:'✧', color:'#8d6452', desc:'돈의 흐름과 기회의 타이밍을 함께 살핍니다.'},
+    {name:'청월 상담', field:'진로·취업', status:'부재중', price:290, rating:4.8, review:544, emoji:'☽', color:'#416c74', desc:'앞으로의 방향과 가능성을 부드럽게 정리합니다.'},
+    {name:'라비 타로', field:'연애·궁합', status:'상담 가능', price:360, rating:5.0, review:421, emoji:'♡', color:'#7e4669', desc:'상대의 마음과 관계의 온도를 따뜻하게 읽습니다.'}
+  ];
+
+  const state = {
+    coins: Number(localStorage.getItem('lunaCoins') || 1250),
+    sales: Number(localStorage.getItem('lunaSales') || 0),
+    fee: Number(localStorage.getItem('lunaFee') || 0),
+    calls: JSON.parse(localStorage.getItem('lunaCalls') || '[]'),
+    readers: JSON.parse(localStorage.getItem('lunaReaders') || 'null') || defaultReaders,
+    onlyOnline:false,
+    call:null,
+    timer:null,
+    seconds:0
+  };
+
+  function persist(){
+    localStorage.setItem('lunaCoins', state.coins);
+    localStorage.setItem('lunaSales', state.sales);
+    localStorage.setItem('lunaFee', state.fee);
+    localStorage.setItem('lunaCalls', JSON.stringify(state.calls));
+    localStorage.setItem('lunaReaders', JSON.stringify(state.readers));
+  }
+
+  function toast(msg){
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.classList.add('show');
+    clearTimeout(window.__toastTimer);
+    window.__toastTimer = setTimeout(()=>el.classList.remove('show'), 2600);
+  }
+
+  function go(id){
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    document.querySelectorAll('[data-nav]').forEach(b=>b.classList.toggle('active',b.dataset.nav===id));
+    renderAll();
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  function renderChips(){
+    const categories = ['전체','연애·궁합','재회·썸','금전·재물','직장·사업','진로·취업'];
+    const box = document.getElementById('categoryChips');
+    box.innerHTML = categories.map(c=>`<button class="chip ${document.getElementById('categoryFilter')?.value===c?'active':''}" onclick="setCategory('${c}')">${c}</button>`).join('');
+  }
+
+  function setCategory(c){
+    document.getElementById('categoryFilter').value = c;
+    renderAdvisors();
+  }
+
+  function renderAdvisors(){
+    const kw = (document.getElementById('searchKeyword').value || '').trim().toLowerCase();
+    const cat = document.getElementById('categoryFilter').value;
+    const st = document.getElementById('statusFilter').value;
+    let list = state.readers.filter(r=>{
+      const text = (r.name + r.field + r.desc).toLowerCase();
+      return (!kw || text.includes(kw)) &&
+        (cat === '전체' || r.field === cat) &&
+        (st === '전체' || r.status === st) &&
+        (!state.onlyOnline || r.status === '상담 가능');
+    });
+
+    document.getElementById('onlineCount').textContent = state.readers.filter(r=>r.status==='상담 가능').length + '명';
+
+    const box = document.getElementById('advisorList');
+    box.innerHTML = list.map((r,i)=>{
+      const realIndex = state.readers.findIndex(x=>x.name===r.name);
+      const statusClass = r.status==='상담 가능' ? '' : r.status==='상담 중' ? 'busy' : 'off';
+      return `
+        <article class="advisor-card">
+          <div class="portrait">
+            <span class="status ${statusClass}">${r.status}</span>
+            <span class="heart" onclick="toast('${r.name} 상담사를 찜했습니다.')">♡</span>
+            <div class="face" style="--avatar:${r.color}">${r.emoji}</div>
+          </div>
+          <div class="advisor-body">
+            <div class="advisor-name">${r.name}</div>
+            <div class="advisor-desc">${r.field} 전문 · ${r.desc}</div>
+            <div class="rating">★ ${r.rating} <span class="muted">(${NUM(r.review)})</span></div>
+            <div class="price">${NUM(r.price)} 코인/분</div>
+            <div class="actions">
+              <button class="${r.status==='상담 가능'?'primary':'secondary'}" ${r.status==='상담 가능'?'':'disabled'} onclick="startCall(${realIndex})">전화 상담</button>
+              <button class="secondary" onclick="toast('${r.name} 상담사에게 채팅 상담 요청을 보냈습니다.')">채팅 상담</button>
+            </div>
+          </div>
+        </article>`;
+    }).join('') || `<div class="glass">조건에 맞는 상담사가 없습니다.</div>`;
+    renderChips();
+  }
+
+  function toggleOnlyOnline(){
+    state.onlyOnline = !state.onlyOnline;
+    toast(state.onlyOnline ? '상담 가능 상담사만 표시합니다.' : '전체 상담사를 표시합니다.');
+    renderAdvisors();
+  }
+
+  function charge(amount){
+    state.coins += amount;
+    state.sales += amount;
+    state.fee += amount * 0.35;
+    persist();
+    renderAll();
+    toast(`${NUM(amount)}C 충전 완료`);
+  }
+
+  function startCall(index){
+    const r = state.readers[index];
+    if(!r || r.status !== '상담 가능'){ toast('현재 상담 가능한 상담사가 아닙니다.'); return; }
+    if(state.call){ toast('이미 진행 중인 상담이 있습니다.'); return; }
+    if(state.coins < r.price){ toast('코인이 부족합니다. 먼저 충전해 주세요.'); return; }
+    state.call = {reader:r.name, price:r.price, index};
+    state.seconds = 0;
+    document.getElementById('callName').textContent = r.name;
+    document.getElementById('callModal').classList.add('active');
+    state.readers[index].status = '상담 중';
+    state.timer = setInterval(()=>{
+      state.seconds++;
+      const minutes = Math.max(1, Math.ceil(state.seconds/60));
+      const cost = minutes * state.call.price;
+      document.getElementById('callText').textContent = `${state.seconds}초 상담 중 · 예상 차감 ${NUM(cost)}C`;
+      document.getElementById('callBar').style.width = Math.min(100,state.seconds*2) + '%';
+      if(cost >= state.coins){ endCall(); toast('코인이 부족하여 상담이 종료되었습니다.'); }
+    },1000);
+    renderAll();
+  }
+
+  function endCall(){
+    if(!state.call) return;
+    clearInterval(state.timer);
+    const minutes = Math.max(1, Math.ceil(state.seconds/60));
+    const cost = minutes * state.call.price;
+    state.coins = Math.max(0, state.coins - cost);
+    state.sales += cost;
+    state.fee += cost * 0.35;
+    state.readers[state.call.index].status = '상담 가능';
+    state.calls.unshift({
+      reader:state.call.reader,
+      seconds:state.seconds,
+      minutes,
+      cost,
+      at:new Date().toLocaleString('ko-KR')
+    });
+    state.call = null;
+    state.seconds = 0;
+    document.getElementById('callModal').classList.remove('active');
+    document.getElementById('callBar').style.width='0%';
+    persist();
+    renderAll();
+    toast('상담이 종료되고 코인이 자동 차감되었습니다.');
+  }
+
+  function renderHistory(){
+    const latest = state.calls.slice(0,3);
+    document.getElementById('recentHistory').innerHTML = latest.length ? latest.map(c=>`
+      <div class="history-item">
+        <div style="display:flex;gap:12px;align-items:center">
+          <div class="round-icon">☎</div>
+          <div><b>${c.reader}</b><div class="muted">${c.at} · ${c.minutes}분</div></div>
+        </div>
+        <b style="color:var(--gold2)">${NUM(c.cost)}C</b>
+      </div>`).join('') : `<div class="muted">아직 상담 내역이 없습니다.</div>`;
+
+    document.getElementById('readerHistory').innerHTML = state.calls.length ? state.calls.map(c=>`
+      <div class="history-item">
+        <div><b>${c.reader}</b><div class="muted">${c.at} · ${c.seconds}초 · ${c.minutes}분 과금</div></div>
+        <b style="color:var(--gold2)">${KRW(c.cost)}</b>
+      </div>`).join('') : `<div class="muted">아직 상담 이력이 없습니다.</div>`;
+
+    document.getElementById('readerCalls').textContent = state.calls.length + '건';
+    const revenue = state.calls.reduce((s,c)=>s+c.cost*0.65,0);
+    document.getElementById('readerRevenue').textContent = KRW(revenue);
+  }
+
+  function saveReaderProfile(){
+    state.readers[0].name = document.getElementById('readerName').value || '루나 타로';
+    state.readers[0].field = document.getElementById('readerCategory').value;
+    state.readers[0].status = document.getElementById('readerStatus').value;
+    state.readers[0].price = Number(document.getElementById('readerPrice').value || 350);
+    state.readers[0].desc = document.getElementById('readerDesc').value || state.readers[0].desc;
+    persist();
+    renderAll();
+    toast('상담사 프로필이 저장되었습니다.');
+  }
+
+  function renderAdmin(){
+    document.getElementById('adminAdvisorCount').textContent = state.readers.length;
+    document.getElementById('adminSales').textContent = KRW(state.sales);
+    document.getElementById('adminFee').textContent = KRW(state.fee);
+    document.getElementById('adminTable').innerHTML = state.readers.map((r,i)=>`
+      <tr>
+        <td>${r.name}</td>
+        <td>${r.field}</td>
+        <td>${r.status}</td>
+        <td>${NUM(r.price)}C</td>
+        <td><button class="secondary" onclick="approve(${i})" style="padding:9px 12px">상담 가능</button></td>
+      </tr>`).join('');
+  }
+
+  function approve(i){
+    state.readers[i].status='상담 가능';
+    persist();
+    renderAll();
+    toast(`${state.readers[i].name} 상담사를 상담 가능 상태로 변경했습니다.`);
+  }
+
+  function simulate(){
+    const readers = Number(document.getElementById('simReaders').value || 0);
+    const daily = Number(document.getElementById('simDaily').value || 0);
+    const rate = Number(document.getElementById('simRate').value || 0) / 100;
+    const cost = Number(document.getElementById('simCost').value || 0);
+    const gross = readers * daily * 30;
+    const platform = gross * rate;
+    const profit = platform - cost;
+    const payback = profit > 0 ? Math.ceil(28000000 / profit) + '개월' : '회수 어려움';
+    document.getElementById('simGross').textContent = KRW(gross);
+    document.getElementById('simPlatform').textContent = KRW(platform);
+    document.getElementById('simProfit').textContent = KRW(profit);
+    document.getElementById('simPayback').textContent = payback;
+  }
+
+  function renderAll(){
+    document.getElementById('coinBalance').textContent = NUM(state.coins);
+    renderAdvisors();
+    renderHistory();
+    renderAdmin();
+    simulate();
+  }
+
+  renderAll();
+</script>
+</body>
+</html>
